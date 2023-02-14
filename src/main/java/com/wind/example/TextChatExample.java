@@ -3,6 +3,7 @@ package com.wind.example;
 import com.wind.Authentication;
 import com.wind.TextChat;
 
+import javax.xml.ws.http.HTTPException;
 import java.io.IOException;
 
 public class TextChatExample {
@@ -17,7 +18,7 @@ public class TextChatExample {
         try {
             TextChat.TextChatResponse resp = textChat.setUser("uuid_123123").send("如何约到漂亮的妹妹");
             System.out.println(resp.getChoices().get(0).getText());
-        } catch (IOException e) {
+        } catch (IOException | HTTPException e) {
             throw new RuntimeException(e);
         }
     }

@@ -27,7 +27,7 @@ public class HttpRequest {
         public byte[] getParams();
     }
 
-    public String done(ParamsHandler ph) throws IOException {
+    public String done(ParamsHandler ph) throws IOException,HTTPException {
         OutputStream os = con.getOutputStream();
         os.write(ph.getParams());
         os.flush();
