@@ -21,10 +21,16 @@ public class HttpRequest {
         con.setRequestProperty("Accept", "application/json");
         con.setRequestProperty("OpenAI-Organization", "org-BLvjuHK8stK27Syz18FrvTaA");
         con.setRequestProperty("Authorization", "Bearer " + pk);
+        con.setRequestProperty("Accept-Charset", "utf-8");
     }
 
     public interface ParamsHandler {
         public byte[] getParams();
+    }
+
+    public HttpRequest addHeader(String key, String val) {
+        con.setRequestProperty(key, val);
+        return this;
     }
 
     public String done(ParamsHandler ph) throws IOException,HTTPException {
