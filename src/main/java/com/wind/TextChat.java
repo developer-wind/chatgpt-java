@@ -3,6 +3,7 @@ package com.wind;
 import com.alibaba.fastjson.JSONObject;
 import com.wind.common.HttpRequest;
 
+import javax.xml.ws.http.HTTPException;
 import java.io.IOException;
 import java.util.List;
 
@@ -207,7 +208,7 @@ public class TextChat {
      * @return TextChatResponse 对方的回复
      * @throws IOException
      */
-    public TextChatResponse send(String prompt) throws IOException {
+    public TextChatResponse send(String prompt) throws IOException, HTTPException {
         HttpRequest httpRequest = new HttpRequest(urlPath, auth.getKey(user));
         String respJson = httpRequest.done(() -> {
                 JSONObject jsonObject = new JSONObject();

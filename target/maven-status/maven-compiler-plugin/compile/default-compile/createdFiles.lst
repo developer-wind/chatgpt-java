@@ -1,0 +1,8 @@
+com/wind/TextChat.class
+com/wind/TextChat$Choices.class
+com/wind/common/HttpRequest.class
+com/wind/Authentication.class
+com/wind/TextChat$TextChatResponse.class
+com/wind/example/TextChatExample.class
+com/wind/TextChat$Usage.class
+com/wind/common/HttpRequest$ParamsHandler.class
