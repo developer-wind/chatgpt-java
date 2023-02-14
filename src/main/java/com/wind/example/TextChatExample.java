@@ -1,0 +1,24 @@
+package com.wind.example;
+
+import com.wind.Authentication;
+import com.wind.TextChat;
+
+import java.io.IOException;
+
+public class TextChatExample {
+    public static void main(String[] args) {
+        //如果有多个账号或者多个私钥可以都写进来，会轮训使用
+        String[] pks = new String[]{
+            "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",
+            "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"
+        };
+        Authentication authentication = new Authentication(pks);
+        TextChat textChat = new TextChat(authentication);
+        try {
+            TextChat.TextChatResponse resp = textChat.setUser("uuid_123123").send("如何约到漂亮的妹妹");
+            System.out.println(resp.getChoices().get(0).getText());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
