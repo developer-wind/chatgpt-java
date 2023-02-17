@@ -33,7 +33,7 @@ public class TextChat {
     /**
      * maxToken 选填参数，是一个整数，表示要生成的最大标记数。默认值为 2048。
      */
-    int maxToken = 2048;
+    int maxToken = 1024;
 
     /**
      * temperature 选填参数，是一个浮点数，表示生成文本的创新程度。较高的温度会产生更具创新性的文本，而较低的温度会产生更具可预测性的文本。默认值为 1。
