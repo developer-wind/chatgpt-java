@@ -258,8 +258,7 @@ public class TextChat {
         String respJson = httpRequest.done(() -> {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("model", model);
-                if (maxToken != 2048)
-                    jsonObject.put("max_tokens", maxToken);
+                jsonObject.put("max_tokens", maxToken);
                 jsonObject.put("echo", echo);
                 jsonObject.put("user", user);
                 jsonObject.put("n", n);
