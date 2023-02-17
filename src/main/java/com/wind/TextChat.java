@@ -21,37 +21,77 @@ public class TextChat {
     String model = "text-curie-001";
 
     /**
-     * maxToken 控制返回答案的长度，最大4096
+     * frequencyPenalty 选填参数，是一个浮点数，用于惩罚模型生成重复的文本。默认值为 0.0。
+     */
+    float frequencyPenalty = 0;
+
+    /**
+     * presencePenalty 选填参数，是一个浮点数，用于惩罚模型生成缺少指定文本内容的文本。默认值为 0.0。
+     */
+    float presencePenalty = 0;
+
+    /**
+     * maxToken 选填参数，是一个整数，表示要生成的最大标记数。默认值为 2048。
      */
     int maxToken = 512;
 
     /**
-     * temperature 答案的随机性
-     * 取值0-2，高随机，低固定
+     * temperature 选填参数，是一个浮点数，表示生成文本的创新程度。较高的温度会产生更具创新性的文本，而较低的温度会产生更具可预测性的文本。默认值为 1。
      */
     float temperature = 1;
 
     /**
-     * top_p
+     * top_p 选填参数，是一个浮点数，表示使用的 Nucleus Sampling 的概率质量分布范围。默认值为 1.0。
      */
-    int top_p = 1;
+    int topP = 1;
 
     /**
-     * n 为每一个问题生成多种答案
-     * 多种答案的token总数不超过maxToken
-     * 建议为1，性价比高
+     * n 选填参数，是一个整数，表示要生成的文本的数量。默认值为 1。
      */
     int n = 1;
 
     /**
-     * 回显问题
+     * stream 选填参数，是一个布尔值，表示是否将生成的文本作为流返回。默认值为 false，这意味着我会将生成的所有文本作为单个响应返回。如果您将此参数设置为 true，则我将生成的文本作为流返回，这可以在生成大量文本时提高性能。
      */
-    boolean echo = false;
+    boolean stream = false;
+
+    public void setStream(boolean stream) {
+        this.stream = stream;
+    }
+
+    public void setStop(String[] stop) {
+        this.stop = stop;
+    }
+
+    /**
+     * echo 选填参数，是一个布尔值，表示是否将输入 prompt 包含在生成的文本中。默认值为 true。
+     */
+    boolean echo = true;
+
+    /**
+     * stop 选填参数，是一个字符串或字符串列表，表示生成文本的停止标记。默认情况下，我会在生成达到 max_tokens 标记数或遇到空字符串时停止生成文本。如果您指定了 stop 参数，则我会在遇到停止标记时停止生成文本。
+     */
+    String[] stop;
 
     /**
      * 唯一用户标识，可以用于追溯
      */
     String user;
+
+    public TextChat setFrequencyPenalty(float frequencyPenalty) {
+        this.frequencyPenalty = frequencyPenalty;
+        return this;
+    }
+
+    public TextChat setPresencePenalty(float presencePenalty) {
+        this.presencePenalty = presencePenalty;
+        return this;
+    }
+
+    public TextChat setTopP(int topP) {
+        this.topP = topP;
+        return this;
+    }
 
     private static final String urlPath = "https://api.openai.com/v1/completions";
 
@@ -76,11 +116,6 @@ public class TextChat {
 
     public TextChat setTemperature(float temperature) {
         this.temperature = temperature;
-        return this;
-    }
-
-    public TextChat setTop_p(int top_p) {
-        this.top_p = top_p;
         return this;
     }
 
@@ -227,9 +262,13 @@ public class TextChat {
                 jsonObject.put("echo", echo);
                 jsonObject.put("user", user);
                 jsonObject.put("n", n);
-                jsonObject.put("top_p", top_p);
+                jsonObject.put("top_p", topP);
                 jsonObject.put("temperature", temperature);
                 jsonObject.put("prompt", prompt);
+                jsonObject.put("stop", stop);
+                jsonObject.put("frequency_penalty", frequencyPenalty);
+                jsonObject.put("presence_penalty", presencePenalty);
+                jsonObject.put("stream", stream);
                 return jsonObject.toJSONString().getBytes();
         });
         JSONObject jsonObject = JSONObject.parseObject(respJson);
