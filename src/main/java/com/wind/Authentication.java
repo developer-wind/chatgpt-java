@@ -24,7 +24,7 @@ public class Authentication {
                 i += aByte;
             }
             int index = i % pks.length;
-            return pks[index];
+            return pks[Math.abs(index)];
         }
     }
 }
