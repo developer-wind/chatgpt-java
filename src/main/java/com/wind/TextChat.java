@@ -251,7 +251,7 @@ public class TextChat {
      * @return TextChatResponse 对方的回复
      * @throws IOException
      */
-    public TextChatResponse send(String prompt) throws IOException, HTTPException {
+    public TextChatResponse send(String prompt) throws IOException {
         HttpRequest httpRequest = new HttpRequest(urlPath, auth.getKey(user));
         if (header != null)
             header.forEach(httpRequest::addHeader);

@@ -35,15 +35,12 @@ public class HttpRequest {
         return this;
     }
 
-    public String done(ParamsHandler ph) throws IOException,HTTPException {
+    public String done(ParamsHandler ph) throws IOException {
         OutputStream os = con.getOutputStream();
         os.write(ph.getParams());
         os.flush();
         os.close();
         int responseCode = con.getResponseCode();
-        if (responseCode != HttpURLConnection.HTTP_OK) {
-            throw new HTTPException(responseCode);
-        }
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         StringBuilder response = new StringBuilder();
 
@@ -52,6 +49,9 @@ public class HttpRequest {
             response.append(inputLine);
         }
         in.close();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            throw new IOException("code:"+responseCode + "; err_msg:"+response.toString());
+        }
         return response.toString();
     }
 }
