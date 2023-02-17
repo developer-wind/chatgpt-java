@@ -218,7 +218,8 @@ public class TextChat {
      */
     public TextChatResponse send(String prompt) throws IOException, HTTPException {
         HttpRequest httpRequest = new HttpRequest(urlPath, auth.getKey(user));
-        header.forEach(httpRequest::addHeader);
+        if (header != null)
+            header.forEach(httpRequest::addHeader);
         String respJson = httpRequest.done(() -> {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("model", model);
