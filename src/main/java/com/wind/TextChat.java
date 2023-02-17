@@ -5,10 +5,13 @@ import com.wind.common.HttpRequest;
 
 import javax.xml.ws.http.HTTPException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 public class TextChat {
     Authentication auth;
+
+    HashMap<String, String> header;
 
     /**
      * model 语言模型
@@ -58,6 +61,11 @@ public class TextChat {
 
     public TextChat setModel(String m) {
         model = m;
+        return this;
+    }
+
+    public TextChat setHeaders(HashMap<String, String> headers) {
+        header = headers;
         return this;
     }
 
@@ -210,6 +218,7 @@ public class TextChat {
      */
     public TextChatResponse send(String prompt) throws IOException, HTTPException {
         HttpRequest httpRequest = new HttpRequest(urlPath, auth.getKey(user));
+        header.forEach(httpRequest::addHeader);
         String respJson = httpRequest.done(() -> {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("model", model);

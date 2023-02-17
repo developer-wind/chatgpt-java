@@ -22,6 +22,8 @@ public class HttpRequest {
         con.setRequestProperty("OpenAI-Organization", "org-BLvjuHK8stK27Syz18FrvTaA");
         con.setRequestProperty("Authorization", "Bearer " + pk);
         con.setRequestProperty("Accept-Charset", "utf-8");
+        //如不需要使用中文可外部覆盖
+        con.setRequestProperty("Accept-Language", "zh-CN");
     }
 
     public interface ParamsHandler {
