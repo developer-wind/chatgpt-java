@@ -33,7 +33,7 @@ public class TextChat {
     /**
      * maxToken 选填参数，是一个整数，表示要生成的最大标记数。默认值为 2048。
      */
-    int maxToken = 512;
+    int maxToken = 2048;
 
     /**
      * temperature 选填参数，是一个浮点数，表示生成文本的创新程度。较高的温度会产生更具创新性的文本，而较低的温度会产生更具可预测性的文本。默认值为 1。
@@ -43,7 +43,7 @@ public class TextChat {
     /**
      * top_p 选填参数，是一个浮点数，表示使用的 Nucleus Sampling 的概率质量分布范围。默认值为 1.0。
      */
-    int topP = 1;
+    float topP = 1;
 
     /**
      * n 选填参数，是一个整数，表示要生成的文本的数量。默认值为 1。
@@ -88,7 +88,7 @@ public class TextChat {
         return this;
     }
 
-    public TextChat setTopP(int topP) {
+    public TextChat setTopP(float topP) {
         this.topP = topP;
         return this;
     }
@@ -258,7 +258,8 @@ public class TextChat {
         String respJson = httpRequest.done(() -> {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("model", model);
-                jsonObject.put("max_tokens", maxToken);
+                if (maxToken != 2048)
+                    jsonObject.put("max_tokens", maxToken);
                 jsonObject.put("echo", echo);
                 jsonObject.put("user", user);
                 jsonObject.put("n", n);
@@ -267,9 +268,12 @@ public class TextChat {
                 jsonObject.put("prompt", prompt);
                 if (stop != null)
                     jsonObject.put("stop", stop);
-                jsonObject.put("frequency_penalty", frequencyPenalty);
-                jsonObject.put("presence_penalty", presencePenalty);
-                jsonObject.put("stream", stream);
+                if (frequencyPenalty > 0)
+                    jsonObject.put("frequency_penalty", frequencyPenalty);
+                if (presencePenalty > 0)
+                    jsonObject.put("presence_penalty", presencePenalty);
+                if (stream)
+                    jsonObject.put("stream", true);
                 return jsonObject.toJSONString().getBytes();
         });
         JSONObject jsonObject = JSONObject.parseObject(respJson);
