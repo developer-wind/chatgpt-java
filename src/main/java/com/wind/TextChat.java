@@ -265,7 +265,8 @@ public class TextChat {
                 jsonObject.put("top_p", topP);
                 jsonObject.put("temperature", temperature);
                 jsonObject.put("prompt", prompt);
-                jsonObject.put("stop", stop);
+                if (stop != null)
+                    jsonObject.put("stop", stop);
                 jsonObject.put("frequency_penalty", frequencyPenalty);
                 jsonObject.put("presence_penalty", presencePenalty);
                 jsonObject.put("stream", stream);
