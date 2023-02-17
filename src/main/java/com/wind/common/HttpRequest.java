@@ -40,7 +40,11 @@ public class HttpRequest {
         os.write(ph.getParams());
         os.flush();
         os.close();
+        this.con.disconnect();
         int responseCode = con.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            throw new IOException("http_code: "+responseCode);
+        }
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         StringBuilder response = new StringBuilder();
 
@@ -49,9 +53,6 @@ public class HttpRequest {
             response.append(inputLine);
         }
         in.close();
-        if (responseCode != HttpURLConnection.HTTP_OK) {
-            throw new IOException("code:"+responseCode + "; err_msg:"+response.toString());
-        }
         return response.toString();
     }
 }
