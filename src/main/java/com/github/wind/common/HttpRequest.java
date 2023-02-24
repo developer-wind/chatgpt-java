@@ -1,6 +1,5 @@
-package com.wind.common;
+package com.github.wind.common;
 
-import javax.xml.ws.http.HTTPException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
