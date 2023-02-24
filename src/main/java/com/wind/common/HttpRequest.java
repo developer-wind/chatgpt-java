@@ -1,4 +1,4 @@
-package com.github.wind.common;
+package com.wind.common;
 
 import java.io.BufferedReader;
 import java.io.IOException;

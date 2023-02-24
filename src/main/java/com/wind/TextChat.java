@@ -1,7 +1,7 @@
-package com.github.wind;
+package com.wind;
 
 import com.alibaba.fastjson.JSONObject;
-import com.github.wind.common.HttpRequest;
+import com.wind.common.HttpRequest;
 
 import java.io.IOException;
 import java.util.HashMap;

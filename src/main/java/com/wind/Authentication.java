@@ -1,4 +1,4 @@
-package com.github.wind;
+package com.wind;
 
 import java.util.NoSuchElementException;
 

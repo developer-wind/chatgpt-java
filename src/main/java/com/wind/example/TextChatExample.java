@@ -1,7 +1,7 @@
-package com.github.wind.example;
+package com.wind.example;
 
-import com.github.wind.Authentication;
-import com.github.wind.TextChat;
+import com.wind.Authentication;
+import com.wind.TextChat;
 
 import javax.xml.ws.http.HTTPException;
 import java.io.IOException;
