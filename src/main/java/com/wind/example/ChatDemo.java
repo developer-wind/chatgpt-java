@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class ChatDemo {
     public static void main(String[] args) {
         try {
-            Chat c = new Chat("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");
+            Chat c = new Chat("sk-ngRDLQ2nZLQrR");
             c.setUser("user_id123");
             ChatMessage[] messages = new ChatMessage[] {
                     new ChatMessage("user", "你好"),
