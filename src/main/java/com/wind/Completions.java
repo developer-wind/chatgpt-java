@@ -4,20 +4,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.wind.common.HttpRequest;
 import com.wind.common.HttpResponse;
 
-
 import java.io.IOException;
-
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 
-
-public class TextChat {
-
-    HashMap<String, String> header;
-
+public class Completions {
     /**
      * model 语言模型
-     * text-davinci-003 收费贵，速度慢，精准
-     * text-curie-001 收费便宜，速度快，次精准
      */
     String model = "text-curie-001";
 
@@ -56,14 +51,6 @@ public class TextChat {
      */
     boolean stream = false;
 
-    public void setStream(boolean stream) {
-        this.stream = stream;
-    }
-
-    public void setStop(String[] stop) {
-        this.stop = stop;
-    }
-
     /**
      * echo 选填参数，是一个布尔值，表示是否将输入 prompt 包含在生成的文本中。默认值为 true。
      */
@@ -79,94 +66,79 @@ public class TextChat {
      */
     String user;
 
-    String pk;
-
-    public TextChat(String pk) {
-        this.pk = pk;
+    public void setModel(String model) {
+        this.model = model;
     }
 
-    public TextChat setPk(String pk) {
-        this.pk = pk;
-        return this;
-    }
-
-    public TextChat setFrequencyPenalty(float frequencyPenalty) {
+    public void setFrequencyPenalty(float frequencyPenalty) {
         this.frequencyPenalty = frequencyPenalty;
-        return this;
     }
 
-    public TextChat setPresencePenalty(float presencePenalty) {
+    public void setPresencePenalty(float presencePenalty) {
         this.presencePenalty = presencePenalty;
-        return this;
     }
 
-    public TextChat setTopP(float topP) {
-        this.topP = topP;
-        return this;
+    public void setMaxToken(int maxToken) {
+        this.maxToken = maxToken;
     }
 
-    private static final String urlPath = "https://api.openai.com/v1/completions";
-
-    public TextChat setModel(String m) {
-        model = m;
-        return this;
-    }
-
-    public TextChat setHeaders(HashMap<String, String> headers) {
-        header = headers;
-        return this;
-    }
-
-    public TextChat setMaxToken(int t) {
-        maxToken = t;
-        return this;
-    }
-
-    public TextChat setTemperature(float temperature) {
+    public void setTemperature(float temperature) {
         this.temperature = temperature;
-        return this;
     }
 
-    public TextChat setN(int n) {
+    public void setTopP(float topP) {
+        this.topP = topP;
+    }
+
+    public void setN(int n) {
         this.n = n;
-        return this;
     }
 
-    public TextChat setEcho(boolean echo) {
+    public void setStream(boolean stream) {
+        this.stream = stream;
+    }
+
+    public void setEcho(boolean echo) {
         this.echo = echo;
-        return this;
     }
 
-    public TextChat setUser(String user) {
+    public void setStop(String[] stop) {
+        this.stop = stop;
+    }
+
+    public void setUser(String user) {
         this.user = user;
-        return this;
     }
 
-    /**
-     * send 发送对话内容
-     * @param prompt 对话内容
-     * @return TextChatResponse 对方的回复
-     * @throws IOException
-     */
-    public HttpResponse send(String prompt) throws IOException {
-        HttpRequest httpRequest = new HttpRequest(urlPath, pk);
+    String url = "https://api.openai.com/v1/completions";
+    HttpRequest httpRequest;
+
+    public Completions(String pk, HashMap<String, String> header) throws IOException {
+        httpRequest = new HttpRequest(url, pk);
         if (header != null)
             header.forEach(httpRequest::addHeader);
+    }
+
+    public Completions(String pk) throws IOException {
+        httpRequest = new HttpRequest(url, pk);
+    }
+
+    public HttpResponse create(String prompt) throws IOException {
         return httpRequest.send(() -> {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("model", model);
-                jsonObject.put("max_tokens", maxToken);
-                jsonObject.put("echo", echo);
-                jsonObject.put("user", user);
-                jsonObject.put("n", n);
-                jsonObject.put("top_p", topP);
-                jsonObject.put("temperature", temperature);
-                jsonObject.put("prompt", prompt);
-                jsonObject.put("stop", stop);
-                jsonObject.put("frequency_penalty", frequencyPenalty);
-                jsonObject.put("presence_penalty", presencePenalty);
-                jsonObject.put("stream", stream);
-                return jsonObject.toJSONString().getBytes();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("model", model);
+            jsonObject.put("max_tokens", maxToken);
+            jsonObject.put("echo", echo);
+            jsonObject.put("user", user);
+            jsonObject.put("n", n);
+            jsonObject.put("top_p", topP);
+            jsonObject.put("temperature", temperature);
+            jsonObject.put("prompt", prompt);
+            jsonObject.put("stop", stop);
+            jsonObject.put("frequency_penalty", frequencyPenalty);
+            jsonObject.put("presence_penalty", presencePenalty);
+            jsonObject.put("stream", stream);
+            return jsonObject.toJSONString().getBytes();
         });
     }
 }

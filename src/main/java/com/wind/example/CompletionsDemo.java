@@ -1,32 +1,28 @@
 package com.wind.example;
 
-import com.wind.Authentication;
-import com.wind.TextChat;
+import com.wind.Completions;
 import com.wind.common.HttpResponse;
 
-import com.wind.serialize.TextChatSct;
+import com.wind.serialize.CompletionsRespObj;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
-public class TextChatExample {
+public class CompletionsDemo {
     public static void main(String[] args) {
-        //如果有多个账号或者多个私钥可以都写进来，会轮训使用
-        Authentication authentication = new Authentication(new String[]{
-            "sk-g6NzxToPUm5qVGlek"
-        });
-        String pk = authentication.getKey("uuid_123123");
-        TextChat textChat = new TextChat(pk);
+        String pk = "pk-sa1sBFsb23";
         try {
-            HttpResponse resp = textChat.setUser("uuid_123123").send("继续");
+            Completions c = new Completions(pk);
+            c.setUser("uuid_123123");
+            HttpResponse resp = c.create("你好!");
             if (resp.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 System.out.println("Pk失效了大哥");
                 //pk失效了
                 return;
             }
 
-            TextChatSct textChatSct = new TextChatSct(resp);
-            TextChatSct.TextChatResponse data = textChatSct.getData();
+            CompletionsRespObj respObj = new CompletionsRespObj(resp);
+            CompletionsRespObj.Response data = respObj.getData();
             if (data == null) {
                 System.out.println("数据解析失败，http_code:"+resp.getCode());
                 //数据解析失败，返回数据异常或服务端有错误

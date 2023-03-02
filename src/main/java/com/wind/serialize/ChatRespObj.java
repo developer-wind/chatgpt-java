@@ -2,11 +2,12 @@ package com.wind.serialize;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wind.common.HttpResponse;
+import com.wind.struct.ChatMessage;
 
 import java.net.HttpURLConnection;
 import java.util.List;
 
-public class TextChatSct {
+public class ChatRespObj {
     private HttpResponse resp;
 
     static public class Usage {
@@ -36,15 +37,17 @@ public class TextChatSct {
     }
 
     static public class Choices {
-        private String text; //回复的内容
+        private ChatMessage message; //回复的内容
         private int index;
         private String logprobs;
         private String finish_reason;
-        public void setText(String text) {
-            this.text = text;
+
+        public ChatMessage getMessage() {
+            return message;
         }
-        public String getText() {
-            return text;
+
+        public void setMessage(ChatMessage message) {
+            this.message = message;
         }
 
         public void setIndex(int index) {
@@ -69,7 +72,7 @@ public class TextChatSct {
         }
     }
 
-    static public class TextChatResponse {
+    static public class Response {
         private String id;
         private String object; //对话类型
         private long created; //创建时间
@@ -120,17 +123,17 @@ public class TextChatSct {
         }
     }
 
-    private TextChatResponse data;
+    private Response data;
 
-    public TextChatResponse getData() {
+    public Response getData() {
         return data;
     }
 
-    public TextChatSct(HttpResponse resp) {
+    public ChatRespObj(HttpResponse resp) {
         this.resp = resp;
         if (this.resp.getCode() == HttpURLConnection.HTTP_OK) {
             JSONObject jsonObject = JSONObject.parseObject(resp.getData());
-            data = JSONObject.toJavaObject(jsonObject, TextChatResponse.class);
+            data = JSONObject.toJavaObject(jsonObject, Response.class);
         }
     }
 }
