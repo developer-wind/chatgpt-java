@@ -11,7 +11,6 @@ import java.util.HashMap;
 
 
 public class TextChat {
-    Authentication auth;
 
     HashMap<String, String> header;
 
@@ -80,6 +79,17 @@ public class TextChat {
      */
     String user;
 
+    String pk;
+
+    public TextChat(String pk) {
+        this.pk = pk;
+    }
+
+    public TextChat setPk(String pk) {
+        this.pk = pk;
+        return this;
+    }
+
     public TextChat setFrequencyPenalty(float frequencyPenalty) {
         this.frequencyPenalty = frequencyPenalty;
         return this;
@@ -96,10 +106,6 @@ public class TextChat {
     }
 
     private static final String urlPath = "https://api.openai.com/v1/completions";
-
-    public TextChat(Authentication a) {
-        this.auth = a;
-    }
 
     public TextChat setModel(String m) {
         model = m;
@@ -136,8 +142,6 @@ public class TextChat {
         return this;
     }
 
-
-
     /**
      * send 发送对话内容
      * @param prompt 对话内容
@@ -145,7 +149,7 @@ public class TextChat {
      * @throws IOException
      */
     public HttpResponse send(String prompt) throws IOException {
-        HttpRequest httpRequest = new HttpRequest(urlPath, auth.getKey(user));
+        HttpRequest httpRequest = new HttpRequest(urlPath, pk);
         if (header != null)
             header.forEach(httpRequest::addHeader);
         return httpRequest.send(() -> {

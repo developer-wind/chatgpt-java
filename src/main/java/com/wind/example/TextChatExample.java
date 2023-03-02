@@ -12,12 +12,11 @@ import java.net.HttpURLConnection;
 public class TextChatExample {
     public static void main(String[] args) {
         //如果有多个账号或者多个私钥可以都写进来，会轮训使用
-        String[] pks = new String[]{
-            "sk-g6NzxToPUm5qVGlek",
-            "sk-ZhhBea34FjhFn"
-        };
-        Authentication authentication = new Authentication(pks);
-        TextChat textChat = new TextChat(authentication);
+        Authentication authentication = new Authentication(new String[]{
+            "sk-g6NzxToPUm5qVGlek"
+        });
+        String pk = authentication.getKey("uuid_123123");
+        TextChat textChat = new TextChat(pk);
         try {
             HttpResponse resp = textChat.setUser("uuid_123123").send("继续");
             if (resp.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
