@@ -2,10 +2,13 @@ package com.wind;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wind.common.HttpRequest;
+import com.wind.common.HttpResponse;
+
 
 import java.io.IOException;
+
 import java.util.HashMap;
-import java.util.List;
+
 
 public class TextChat {
     Authentication auth;
@@ -133,116 +136,7 @@ public class TextChat {
         return this;
     }
 
-    static public class Usage {
-        private int prompt_tokens;
-        private int completion_tokens;
-        private int total_tokens;
-        public void setPrompt_tokens(int prompt_tokens) {
-            this.prompt_tokens = prompt_tokens;
-        }
-        public int getPrompt_tokens() {
-            return prompt_tokens;
-        }
 
-        public void setCompletion_tokens(int completion_tokens) {
-            this.completion_tokens = completion_tokens;
-        }
-        public int getCompletion_tokens() {
-            return completion_tokens;
-        }
-
-        public void setTotal_tokens(int total_tokens) {
-            this.total_tokens = total_tokens;
-        }
-        public int getTotal_tokens() {
-            return total_tokens;
-        }
-    }
-
-    static public class Choices {
-        private String text; //回复的内容
-        private int index;
-        private String logprobs;
-        private String finish_reason;
-        public void setText(String text) {
-            this.text = text;
-        }
-        public String getText() {
-            return text;
-        }
-
-        public void setIndex(int index) {
-            this.index = index;
-        }
-        public int getIndex() {
-            return index;
-        }
-
-        public void setLogprobs(String logprobs) {
-            this.logprobs = logprobs;
-        }
-        public String getLogprobs() {
-            return logprobs;
-        }
-
-        public void setFinish_reason(String finish_reason) {
-            this.finish_reason = finish_reason;
-        }
-        public String getFinish_reason() {
-            return finish_reason;
-        }
-    }
-
-    static public class TextChatResponse {
-        private String id;
-        private String object; //对话类型
-        private long created; //创建时间
-        private String model; //语言模型
-        private List<Choices> choices; //包含回复的具体数据
-        private Usage usage; //token统计相关
-
-        public void setId(String id) {
-            this.id = id;
-        }
-        public String getId() {
-            return id;
-        }
-
-        public void setObject(String object) {
-            this.object = object;
-        }
-        public String getObject() {
-            return object;
-        }
-
-        public void setCreated(long created) {
-            this.created = created;
-        }
-        public long getCreated() {
-            return created;
-        }
-
-        public void setModel(String model) {
-            this.model = model;
-        }
-        public String getModel() {
-            return model;
-        }
-
-        public void setChoices(List<Choices> choices) {
-            this.choices = choices;
-        }
-        public List<Choices> getChoices() {
-            return choices;
-        }
-
-        public void setUsage(Usage usage) {
-            this.usage = usage;
-        }
-        public Usage getUsage() {
-            return usage;
-        }
-    }
 
     /**
      * send 发送对话内容
@@ -250,11 +144,11 @@ public class TextChat {
      * @return TextChatResponse 对方的回复
      * @throws IOException
      */
-    public TextChatResponse send(String prompt) throws IOException {
+    public HttpResponse send(String prompt) throws IOException {
         HttpRequest httpRequest = new HttpRequest(urlPath, auth.getKey(user));
         if (header != null)
             header.forEach(httpRequest::addHeader);
-        String respJson = httpRequest.done(() -> {
+        return httpRequest.send(() -> {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("model", model);
                 jsonObject.put("max_tokens", maxToken);
@@ -264,17 +158,11 @@ public class TextChat {
                 jsonObject.put("top_p", topP);
                 jsonObject.put("temperature", temperature);
                 jsonObject.put("prompt", prompt);
-                if (stop != null)
-                    jsonObject.put("stop", stop);
-                if (frequencyPenalty > 0)
-                    jsonObject.put("frequency_penalty", frequencyPenalty);
-                if (presencePenalty > 0)
-                    jsonObject.put("presence_penalty", presencePenalty);
-                if (stream)
-                    jsonObject.put("stream", true);
+                jsonObject.put("stop", stop);
+                jsonObject.put("frequency_penalty", frequencyPenalty);
+                jsonObject.put("presence_penalty", presencePenalty);
+                jsonObject.put("stream", stream);
                 return jsonObject.toJSONString().getBytes();
         });
-        JSONObject jsonObject = JSONObject.parseObject(respJson);
-        return JSONObject.toJavaObject(jsonObject, TextChatResponse.class);
     }
 }

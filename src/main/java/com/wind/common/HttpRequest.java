@@ -1,10 +1,13 @@
 package com.wind.common;
 
+import javax.xml.ws.http.HTTPException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 
 public class HttpRequest {
@@ -34,7 +37,7 @@ public class HttpRequest {
         return this;
     }
 
-    public String done(ParamsHandler ph) throws IOException {
+    public HttpResponse send(ParamsHandler ph) throws IOException {
         OutputStream os = con.getOutputStream();
         os.write(ph.getParams());
         os.flush();
@@ -42,8 +45,9 @@ public class HttpRequest {
         this.con.disconnect();
         int responseCode = con.getResponseCode();
         if (responseCode != HttpURLConnection.HTTP_OK) {
-            throw new IOException("http_code: "+responseCode);
+            return new HttpResponse(responseCode);
         }
+
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         StringBuilder response = new StringBuilder();
 
@@ -52,6 +56,6 @@ public class HttpRequest {
             response.append(inputLine);
         }
         in.close();
-        return response.toString();
+        return new HttpResponse(responseCode, response.toString());
     }
 }
